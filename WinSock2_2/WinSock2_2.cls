@@ -1727,7 +1727,7 @@ Private Function WinSockErrorMsg(ErrNum As Long, Source As String)
     str = VBA.Left(errStr, iResult)
     ErrNum = vbObjectError + ErrNum
     
-    err.Raise ErrNum, "WinSock2." & Source, str
+    err.Raise ErrNum, "WinSock2_2." & Source, str
 End Function
 Private Function CustomErrorMsg(Source As String, ErrNum As CUSTOMERROR)
     Dim Msg As String
@@ -1751,7 +1751,7 @@ Private Function CustomErrorMsg(Source As String, ErrNum As CUSTOMERROR)
             Msg = "Server/Client Has not been Started."
     End Select
     
-    err.Raise vbObjectError + ErrNum, "WinSock2." & Source, Msg
+    err.Raise vbObjectError + ErrNum, "WinSock2_2." & Source, Msg
 End Function
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 'Class Functions                                                '
