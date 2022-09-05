@@ -428,7 +428,7 @@ Private Function createTokens(Str As String) As Object
         Set RegEx = CreateObject("VBScript.RegExp")
     End If
     
-    RegEx.Pattern = """(([^""\\]|\\.)*)""|[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?|\w+|[^\s""']+?"
+    RegEx.Pattern = """(([^""\\]|\\.)*)""|[+\-]?(?:""|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?|\w+|[^\s""']+?"
     RegEx.IgnoreCase = True
     RegEx.Global = True
     RegEx.MultiLine = False
