@@ -43,10 +43,10 @@ End Enum
 '   Takes a valid JSON string and turns it into a JSON Object
 'Params
 '   [in] string Str  -  The valid JSON String
-Public Sub parseString(Str As String)
+Public Sub parseString(str As String)
     Dim mCol As Object
     
-    Set mCol = createTokens(Str)
+    Set mCol = createTokens(str)
     parseTokens mCol
 End Sub
 ''
@@ -96,12 +96,12 @@ End Property
 '                                 JSONObj
 '                                 JSONString
 '                                 JSONNumber
-Public Function getValue(Key As String) As JSON
+Public Function getValue(key As String) As JSON
     Dim k As JSONKey
     Dim v As JSONValue
     Dim j As JSON
     
-    k = findKey(Key)
+    k = findKey(key)
     
     If k.Index <> -1 Then
         v = valCollection(k.Index)
@@ -145,7 +145,7 @@ End Function
 '                                   already in the Index will be ignored. Any ignored key will have it's value
 '                                   appened to the end of the array with a Key equal to +1 the current highest
 '                                   index
-Public Function setValue(Value As Variant, Optional Key As String)
+Public Function setValue(Value As Variant, Optional key As String)
     Dim vT As VbVarType: vT = VarType(Value)
     
     If objType = JSONNumber Or objType = JSONString Then
@@ -168,7 +168,7 @@ Public Function setValue(Value As Variant, Optional Key As String)
     Dim v As JSONValue
     Dim j As JSON
     
-    k = findKey(VBA.Trim$(Key))
+    k = findKey(VBA.Trim$(key))
     
     If k.Index = -1 Then
         If isKeysAllocated Then
@@ -186,7 +186,7 @@ Public Function setValue(Value As Variant, Optional Key As String)
         If objType = JSONArray Then
             keyCollection(UBound(keyCollection)).Name = UBound(valCollection)
         Else
-            keyCollection(UBound(keyCollection)).Name = VBA.Trim$(Key)
+            keyCollection(UBound(keyCollection)).Name = VBA.Trim$(key)
         End If
         
         k.Index = keyCollection(UBound(keyCollection)).Index
@@ -239,15 +239,15 @@ End Function
 '   Removes a Value Key pair from the JSON Object
 'Params:
 '   [in] String Key  -  The Key of the Value Key pair to remove
-Public Sub remove(Key As String)
+Public Sub Remove(key As String)
     If objType <> JSONArray And objType <> JSONObj Then Exit Sub
     Dim k As JSONKey
     
-    k = findKey(VBA.Trim$(Key))
+    k = findKey(VBA.Trim$(key))
     
     If k.Index = -1 Then Exit Sub
     
-    removeKey VBA.Trim$(Key)
+    removeKey VBA.Trim$(key)
     removeValue k.Index
 End Sub
 ''
@@ -257,10 +257,10 @@ End Sub
 '   [in]  string  Key     -  The Key to check
 'Returns:
 '   [out] Boolean hasKey  -  True if the Key is found, otherwise False
-Public Function hasKey(Key As String) As Boolean
+Public Function hasKey(key As String) As Boolean
     Dim k As JSONKey
     
-    k = findKey(Key)
+    k = findKey(key)
     hasKey = k.Index <> -1
 End Function
 ''
@@ -423,7 +423,7 @@ End Function
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 'INTERNAL/HELPER FUNCTIONS                              '
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Private Function createTokens(Str As String) As Object
+Private Function createTokens(str As String) As Object
     If RegEx Is Nothing Then
         Set RegEx = CreateObject("VBScript.RegExp")
     End If
@@ -433,7 +433,7 @@ Private Function createTokens(Str As String) As Object
     RegEx.Global = True
     RegEx.MultiLine = False
     
-    Set createTokens = RegEx.Execute(Str)
+    Set createTokens = RegEx.Execute(str)
 End Function
 
 Private Sub parseTokens(mCol As Object)
@@ -625,12 +625,12 @@ Private Function isValsAllocated() As Boolean
     isValsAllocated = (Not Not valCollection) <> 0
 End Function
 
-Private Function findKey(Key As String) As JSONKey
+Private Function findKey(key As String) As JSONKey
     Dim i As Long
     
     If isKeysAllocated Then
         For i = 0 To UBound(keyCollection)
-            If VBA.Trim$(Key) = VBA.Trim$(keyCollection(i).Name) Then
+            If VBA.Trim$(key) = VBA.Trim$(keyCollection(i).Name) Then
                 findKey.Index = keyCollection(i).Index
                 findKey.Name = keyCollection(i).Name
                 Exit Function
@@ -655,43 +655,45 @@ Private Function repeat(Value As String, Number As Long) As String
     repeat = VBA.Join(out, "")
 End Function
 
-Private Sub removeKey(Key As String)
+Private Sub removeKey(key As String)
     If Not isKeysAllocated Then Exit Sub
     Dim i As Long
-    Dim Idx As Long
+    Dim idx As Long
     
     For i = 0 To UBound(keyCollection)
-        If VBA.Trim$(Key) = VBA.Trim$(keyCollection(i).Name) Then
-            Idx = i
+        If VBA.Trim$(key) = VBA.Trim$(keyCollection(i).Name) Then
+            idx = i
             Exit For
         End If
     Next i
     
-    If Idx > UBound(keyCollection) And UBound(keyCollection) > 0 Then Exit Sub
+    If idx > UBound(keyCollection) And UBound(keyCollection) > 0 Then Exit Sub
     If UBound(keyCollection) = 0 Then
         Erase keyCollection
         Exit Sub
     End If
     
-    For i = Idx To UBound(keyCollection) - 1
-        keyCollection(i + 1).Index = keyCollection(i).Index
+    For i = idx To UBound(keyCollection) - 1
+        keyCollection(i + 1).Index = i
+        If objType = JSONArray Then keyCollection(i + 1).Name = CStr(i)
         keyCollection(i) = keyCollection(i + 1)
     Next i
+    
     
     ReDim Preserve keyCollection(0 To UBound(keyCollection) - 1)
 End Sub
 
-Private Sub removeValue(Idx As Long)
+Private Sub removeValue(idx As Long)
     If Not isValsAllocated Then Exit Sub
     Dim i As Long
     
-    If Idx > UBound(valCollection) And UBound(valCollection) > 0 Then Exit Sub
+    If idx > UBound(valCollection) And UBound(valCollection) > 0 Then Exit Sub
     If UBound(valCollection) = 0 Then
         Erase valCollection
         Exit Sub
     End If
     
-    For i = Idx To UBound(valCollection) - 1
+    For i = idx To UBound(valCollection) - 1
         valCollection(i) = valCollection(i + 1)
     Next i
     
