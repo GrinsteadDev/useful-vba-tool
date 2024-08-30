@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created Form Objects to Events
+' Allows VBA Developers to Register Progammatically Created Form Objects to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -24,7 +30,7 @@ Attribute VB_Exposed = False
 '           scrollEvent.AddEvent "My_Change", ScrollBarEventTypes.Change, Me
 '       End Sub
 '
-'       Sub My_Change()
+'       Sub My_Change(Sender As MSForms.ScrollBar)
 '           MsgBox "I was Changed"
 '       End Sub
 '
@@ -42,7 +48,7 @@ Attribute VB_Exposed = False
 '           scrollEvent.AddEvent "My_Change", ScrollBarEventTypes.Change
 '       End Sub
 '
-'       Sub My_Change()
+'       Sub My_Change(Sender As MSForms.ScrollBar)
 '           MsgBox "I was Changed"
 '       End Sub
 '
@@ -122,9 +128,9 @@ Private Sub FormScrollBar_BeforeDragOver( _
     
     For Each tmp In EventCollection(ScrollBarEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Date, X, Y, DragState, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, Cancel, Data, X, Y, DragState, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Date, X, Y, DragState, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, Cancel, Data, X, Y, DragState, Effect, Shift
         End If
     Next
 End Sub
@@ -138,9 +144,9 @@ Private Sub FormScrollBar_BeforeDropOrPaste( _
     
     For Each tmp In EventCollection(ScrollBarEventTypes.BeforeDropOrPast)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, Cancel, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, Cancel, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -150,9 +156,9 @@ Private Sub FormScrollBar_Change()
     
     For Each tmp In EventCollection(ScrollBarEventTypes.Change)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar
         End If
     Next
 End Sub
@@ -167,9 +173,9 @@ Private Sub FormScrollBar_Error( _
     
     For Each tmp In EventCollection(ScrollBarEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -179,9 +185,9 @@ Private Sub FormScrollBar_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal 
     
     For Each tmp In EventCollection(ScrollBarEventTypes.KeyDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, KeyCode, Shift
         End If
     Next
 End Sub
@@ -191,9 +197,9 @@ Private Sub FormScrollBar_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     
     For Each tmp In EventCollection(ScrollBarEventTypes.KeyPress)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyAscii
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, KeyAscii
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyAscii
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, KeyAscii
         End If
     Next
 End Sub
@@ -203,9 +209,9 @@ Private Sub FormScrollBar_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Sh
     
     For Each tmp In EventCollection(ScrollBarEventTypes.KeyUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, KeyCode, Shift
         End If
     Next
 End Sub
@@ -219,9 +225,9 @@ Private Sub FormScrollBar_Scroll( _
 
     For Each tmp In EventCollection(ScrollBarEventTypes.Scroll)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
+            Application.Run tmp(EventObj.NameIndex), FormScrollBar, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormScrollBar, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
         End If
     Next
 End Sub

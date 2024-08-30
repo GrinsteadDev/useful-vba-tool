@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created Form Objects to Events
+' Allows VBA Developers to Register Progammatically Created Form Objects to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -25,10 +31,10 @@ Attribute VB_Exposed = False
 '           cbboxEvent.AddEvent "My_DblClick", ComboBoxEventTypes.DblClick, Me
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.ComboBox)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.ComboBox, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -47,10 +53,10 @@ Attribute VB_Exposed = False
 '           cbboxEvent.AddEvent "My_DblClick", ComboBoxEventTypes.DblClick
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.ComboBox)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.ComboBox, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -141,9 +147,9 @@ Private Sub FormComboBox_BeforeDragOver( _
     
     For Each tmp In EventCollection(ComboBoxEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Data, X, Y, DragState, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Cancel, Data, X, Y, DragState, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Data, X, Y, DragState, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Cancel, Data, X, Y, DragState, Effect, Shift
         End If
     Next
 End Sub
@@ -157,9 +163,9 @@ Private Sub FormComboBox_BeforeDropOrPaste( _
     
     For Each tmp In EventCollection(ComboBoxEventTypes.BeforeDropOrPaste)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Cancel, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Cancel, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -169,9 +175,9 @@ Private Sub FormComboBox_Change()
     
     For Each tmp In EventCollection(ComboBoxEventTypes.Change)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormComboBox
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox
         End If
     Next
 End Sub
@@ -181,9 +187,9 @@ Private Sub FormComboBox_Click()
     
     For Each tmp In EventCollection(ComboBoxEventTypes.Click)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormComboBox
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox
         End If
     Next
 End Sub
@@ -193,9 +199,9 @@ Private Sub FormComboBox_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     
     For Each tmp In EventCollection(ComboBoxEventTypes.DblClick)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Cancel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Cancel
         End If
     Next
 End Sub
@@ -205,9 +211,9 @@ Private Sub FormComboBox_DropButtonClick()
     
     For Each tmp In EventCollection(ComboBoxEventTypes.DropButtonClick)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormComboBox
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox
         End If
     Next
 End Sub
@@ -221,9 +227,9 @@ Private Sub FormComboBox_Error( _
     
     For Each tmp In EventCollection(ComboBoxEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -233,9 +239,9 @@ Private Sub FormComboBox_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal S
     
     For Each tmp In EventCollection(ComboBoxEventTypes.KeyDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, KeyCode, Shift
         End If
     Next
 End Sub
@@ -245,9 +251,9 @@ Private Sub FormComboBox_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     
     For Each tmp In EventCollection(ComboBoxEventTypes.KeyPress)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyAscii
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, KeyAscii
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyAscii
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, KeyAscii
         End If
     Next
 End Sub
@@ -257,9 +263,9 @@ Private Sub FormComboBox_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shi
     
     For Each tmp In EventCollection(ComboBoxEventTypes.KeyUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, KeyCode, Shift
         End If
     Next
 End Sub
@@ -269,9 +275,9 @@ Private Sub FormComboBox_MouseDown(ByVal Button As Integer, ByVal Shift As Integ
     
     For Each tmp In EventCollection(ComboBoxEventTypes.MouseDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -281,9 +287,9 @@ Private Sub FormComboBox_MouseMove(ByVal Button As Integer, ByVal Shift As Integ
     
     For Each tmp In EventCollection(ComboBoxEventTypes.MouseMove)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -293,9 +299,9 @@ Private Sub FormComboBox_MouseUp(ByVal Button As Integer, ByVal Shift As Integer
     
     For Each tmp In EventCollection(ComboBoxEventTypes.MouseUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormComboBox, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormComboBox, Button, Shift, X, Y
         End If
     Next
 End Sub

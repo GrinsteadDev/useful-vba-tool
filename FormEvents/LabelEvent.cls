@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created Form Objects to Events
+' Allows VBA Developers to Register Progammatically Created Form Objects to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -25,10 +31,10 @@ Attribute VB_Exposed = False
 '           lblEvent.AddEvent "My_DblClick", LabelEventTypes.DblClick, Me
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.Label)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.Label, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -47,10 +53,10 @@ Attribute VB_Exposed = False
 '           lblEvent.AddEvent "My_DblClick", LabelEventTypes.DblClick
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.Label)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.Label, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -130,9 +136,9 @@ Private Sub FormLabel_BeforeDragOver( _
     
     For Each tmp In EventCollection(LabelEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Date, X, Y, DragState, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Cancel, Data, X, Y, DragState, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Date, X, Y, DragState, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Cancel, Data, X, Y, DragState, Effect, Shift
         End If
     Next
 End Sub
@@ -146,9 +152,9 @@ Private Sub FormLabel_BeforeDropOrPaste( _
     
     For Each tmp In EventCollection(LabelEventTypes.BeforeDropOrPast)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Cancel, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Cancel, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -158,9 +164,9 @@ Private Sub FormLabel_Click()
     
     For Each tmp In EventCollection(LabelEventTypes.Click)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormLabel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel
         End If
     Next
 End Sub
@@ -170,9 +176,9 @@ Private Sub FormLabel_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     
     For Each tmp In EventCollection(LabelEventTypes.DblClick)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Cancel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Cancel
         End If
     Next
 End Sub
@@ -187,9 +193,9 @@ Private Sub FormLabel_Error( _
     
     For Each tmp In EventCollection(LabelEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -202,9 +208,9 @@ Private Sub FormLabel_MouseDown( _
     
     For Each tmp In EventCollection(LabelEventTypes.MouseDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -217,9 +223,9 @@ Private Sub FormLabel_MouseMove( _
     
     For Each tmp In EventCollection(LabelEventTypes.MouseMove)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -232,9 +238,9 @@ Private Sub FormLabel_MouseUp( _
     
     For Each tmp In EventCollection(LabelEventTypes.MouseUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormLabel, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormLabel, Button, Shift, X, Y
         End If
     Next
 End Sub

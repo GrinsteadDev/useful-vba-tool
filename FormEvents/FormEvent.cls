@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created Form to Events
+' Allows VBA Developers to Register Progammatically Created Form to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -25,10 +31,10 @@ Attribute VB_Exposed = False
 '           frmEvent.AddEvent "My_DblClick", FormEventTypes.DblClick, Me
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.UserForm)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.UserForm, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -47,10 +53,10 @@ Attribute VB_Exposed = False
 '           frmEvent.AddEvent "My_DblClick", FormEventTypes.DblClick
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.UserForm)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.UserForm, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -142,9 +148,9 @@ Private Sub Form_AddControl(ByVal Control As MSForms.Control)
 
     For Each tmp In EventCollection(FormEventTypes.AddControl)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Control
+            Application.Run tmp(EventObj.NameIndex), Form, Control
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Control
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Control
         End If
     Next
 End Sub
@@ -159,9 +165,9 @@ Private Sub Form_BeforeDragOver( _
 
     For Each tmp In EventCollection(FormEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Control, Data, X, Y, State, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), Form, Cancel, Control, Data, X, Y, State, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Control, Data, X, Y, State, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Cancel, Control, Data, X, Y, State, Effect, Shift
         End If
     Next
 End Sub
@@ -175,9 +181,9 @@ Private Sub Form_BeforeDropOrPaste( _
 
     For Each tmp In EventCollection(FormEventTypes.BeforeDropOrPaste)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Control, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), Form, Cancel, Control, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Control, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Cancel, Control, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -187,9 +193,9 @@ Private Sub Form_Click()
 
     For Each tmp In EventCollection(FormEventTypes.Click)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), Form
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form
         End If
     Next
 End Sub
@@ -199,9 +205,9 @@ Private Sub Form_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
 
     For Each tmp In EventCollection(FormEventTypes.DblClick)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel
+            Application.Run tmp(EventObj.NameIndex), Form, Cancel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Cancel
         End If
     Next
 End Sub
@@ -215,9 +221,9 @@ Private Sub Form_Error( _
 
     For Each tmp In EventCollection(FormEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), Form, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -227,9 +233,9 @@ Private Sub Form_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As 
 
     For Each tmp In EventCollection(FormEventTypes.KeyDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), Form, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, KeyCode, Shift
         End If
     Next
 End Sub
@@ -239,9 +245,9 @@ Private Sub Form_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     For Each tmp In EventCollection(FormEventTypes.KeyPress)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyAscii
+            Application.Run tmp(EventObj.NameIndex), Form, KeyAscii
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyAscii
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, KeyAscii
         End If
     Next
 End Sub
@@ -251,9 +257,9 @@ Private Sub Form_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As In
 
     For Each tmp In EventCollection(FormEventTypes.KeyUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), Form, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, KeyCode, Shift
         End If
     Next
 End Sub
@@ -263,9 +269,9 @@ Private Sub Form_Layout()
 
     For Each tmp In EventCollection(FormEventTypes.Layout)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), Form
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form
         End If
     Next
 End Sub
@@ -275,9 +281,9 @@ Private Sub Form_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVa
 
     For Each tmp In EventCollection(FormEventTypes.MouseDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), Form, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -287,9 +293,9 @@ Private Sub Form_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVa
 
     For Each tmp In EventCollection(FormEventTypes.MouseMove)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), Form, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -299,9 +305,9 @@ Private Sub Form_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByVal 
 
     For Each tmp In EventCollection(FormEventTypes.MouseUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), Form, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -311,9 +317,9 @@ Private Sub Form_RemoveControl(ByVal Control As MSForms.Control)
 
     For Each tmp In EventCollection(FormEventTypes.RemoveControl)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Control
+            Application.Run tmp(EventObj.NameIndex), Form, Control
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Control
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Control
         End If
     Next
 End Sub
@@ -327,9 +333,9 @@ Private Sub Form_Scroll( _
 
     For Each tmp In EventCollection(FormEventTypes.Scroll)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
+            Application.Run tmp(EventObj.NameIndex), Form, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
         End If
     Next
 End Sub
@@ -339,9 +345,9 @@ Private Sub Form_Zoom(Percent As Integer)
 
     For Each tmp In EventCollection(FormEventTypes.Zoom)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Percent
+            Application.Run tmp(EventObj.NameIndex), Form, Percent
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Percent
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Form, Percent
         End If
     Next
 End Sub

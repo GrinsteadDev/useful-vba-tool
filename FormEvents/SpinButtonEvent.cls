@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created Form Objects to Events
+' Allows VBA Developers to Register Progammatically Created Form Objects to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -24,7 +30,7 @@ Attribute VB_Exposed = False
 '           spinBtnEvent.AddEvent "My_Change", SpinButtonEventTypes.Change, Me
 '       End Sub
 '
-'       Sub My_Change()
+'       Sub My_Change(Sender As MSForms.SpinButton)
 '           MsgBox "I was Changed"
 '       End Sub
 '
@@ -42,7 +48,7 @@ Attribute VB_Exposed = False
 '           spinBtnEvent.AddEvent "My_Change", SpinButtonEventTypes.Change
 '       End Sub
 '
-'       Sub My_Change()
+'       Sub My_Change(Sender As MSForms.SpinButton)
 '           MsgBox "I was Changed"
 '       End Sub
 '
@@ -124,9 +130,9 @@ Private Sub FormSpinButton_BeforeDragOver( _
     
     For Each tmp In EventCollection(SpinButtonEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Date, X, Y, DragState, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton, Cancel, Data, X, Y, DragState, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Date, X, Y, DragState, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton, Cancel, Data, X, Y, DragState, Effect, Shift
         End If
     Next
 End Sub
@@ -140,9 +146,9 @@ Private Sub FormSpinButton_BeforeDropOrPaste( _
     
     For Each tmp In EventCollection(SpinButtonEventTypes.BeforeDropOrPast)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton, Cancel, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton, Cancel, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -152,9 +158,9 @@ Private Sub FormSpinButton_Change()
     
     For Each tmp In EventCollection(SpinButtonEventTypes.Change)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton
         End If
     Next
 End Sub
@@ -169,9 +175,9 @@ Private Sub FormSpinButton_Error( _
     
     For Each tmp In EventCollection(SpinButtonEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -181,9 +187,9 @@ Private Sub FormSpinButton_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal
     
     For Each tmp In EventCollection(SpinButtonEventTypes.KeyDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton, KeyCode, Shift
         End If
     Next
 End Sub
@@ -193,9 +199,9 @@ Private Sub FormSpinButton_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     
     For Each tmp In EventCollection(SpinButtonEventTypes.KeyPress)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyAscii
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton, KeyAscii
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyAscii
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton, KeyAscii
         End If
     Next
 End Sub
@@ -205,9 +211,9 @@ Private Sub FormSpinButton_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal S
     
     For Each tmp In EventCollection(SpinButtonEventTypes.KeyUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton, KeyCode, Shift
         End If
     Next
 End Sub
@@ -217,9 +223,9 @@ Private Sub FormSpinButton_SpinDown()
     
     For Each tmp In EventCollection(SpinButtonEventTypes.SpinDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton
         End If
     Next
 End Sub
@@ -229,9 +235,9 @@ Private Sub FormSpinButton_SpinUp()
     
     For Each tmp In EventCollection(SpinButtonEventTypes.SpinUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormSpinButton
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormSpinButton
         End If
     Next
 End Sub

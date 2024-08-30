@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created FormFrame to Events
+' Allows VBA Developers to Register Progammatically Created FormFrame to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -24,7 +30,7 @@ Attribute VB_Exposed = False
 '           crtEvent.AddEvent "My_Enter", ControlEventTypes.Enter, Me
 '       End Sub
 '
-'       Sub My_Enter()
+'       Sub My_Enter(Sender As MSForms.Control)
 '           Debug.Print "Control Entered"
 '       End Sub
 '   2:
@@ -41,7 +47,7 @@ Attribute VB_Exposed = False
 '           crtEvent.AddEvent "My_Enter", ControlEventTypes.Enter
 '       End Sub
 '
-'       Sub My_Enter()
+'       Sub My_Enter(Sender As MSForms.Control)
 '           Debug.Print "Control Entered"
 '       End Sub
 '
@@ -109,9 +115,9 @@ Private Sub FormControl_AfterUpdate()
 
     For Each tmp In EventCollection(ControlEventTypes.AfterUpdate)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormControl
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormControl
         End If
     Next
 End Sub
@@ -121,9 +127,9 @@ Private Sub FormControl_BeforeUpdate(ByVal Cancel As MSForms.ReturnBoolean)
 
     For Each tmp In EventCollection(ControlEventTypes.BeforeUpdate)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel
+            Application.Run tmp(EventObj.NameIndex), FormControl, Cancel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormControl, Cancel
         End If
     Next
 End Sub
@@ -133,9 +139,9 @@ Private Sub FormControl_Enter()
 
     For Each tmp In EventCollection(ControlEventTypes.Enter)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormControl
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormControl
         End If
     Next
 End Sub
@@ -145,9 +151,9 @@ Private Sub FormControl_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     For Each tmp In EventCollection(ControlEventTypes.ExitEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel
+            Application.Run tmp(EventObj.NameIndex), FormControl, Cancel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormControl, Cancel
         End If
     Next
 End Sub

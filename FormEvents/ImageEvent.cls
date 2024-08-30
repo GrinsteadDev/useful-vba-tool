@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created FormFrame to Events
+' Allows VBA Developers to Register Progammatically Created FormFrame to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -24,7 +30,7 @@ Attribute VB_Exposed = False
 '           imgEvent.AddEvent "My_MouseDown", ImageEventTypes.MouseDown, Me
 '       End Sub
 '
-'       Sub My_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+'       Sub My_MouseDown(Sender MSForms.Image, ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
 '           '' Prints the Mouse Button Pressed
 '           Debug.Print "Mouse Button Pressed " & CStr(Button)
 '       End Sub
@@ -42,7 +48,7 @@ Attribute VB_Exposed = False
 '           imgEvent.AddEvent "My_MouseDown", ImageEventTypes.MouseDown
 '       End Sub
 '
-'       Sub My_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+'       Sub My_MouseDown(Sender MSForms.Image, ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
 '           '' Prints the Mouse Button Pressed
 '           Debug.Print "Mouse Button Pressed " & CStr(Button)
 '       End Sub
@@ -120,9 +126,9 @@ Private Sub FormImage_BeforeDragOver( _
 
     For Each tmp In EventCollection(ImageEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Control, Data, X, Y, State, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormImage, Cancel, Control, Data, X, Y, State, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Control, Data, X, Y, State, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormImage, Cancel, Control, Data, X, Y, State, Effect, Shift
         End If
     Next
 End Sub
@@ -136,9 +142,9 @@ Private Sub FormImage_BeforeDropOrPaste( _
 
     For Each tmp In EventCollection(ImageEventTypes.BeforeDropOrPaste)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Control, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormImage, Cancel, Control, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Control, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormImage, Cancel, Control, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -152,9 +158,9 @@ Private Sub FormImage_Error( _
 
     For Each tmp In EventCollection(ImageEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), FormImage, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormImage, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -164,9 +170,9 @@ Private Sub FormImage_MouseDown(ByVal Button As Integer, ByVal Shift As Integer,
 
     For Each tmp In EventCollection(ImageEventTypes.MouseDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormImage, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormImage, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -176,9 +182,9 @@ Private Sub FormImage_MouseMove(ByVal Button As Integer, ByVal Shift As Integer,
 
     For Each tmp In EventCollection(ImageEventTypes.MouseMove)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormImage, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormImage, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -188,9 +194,9 @@ Private Sub FormImage_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, B
 
     For Each tmp In EventCollection(ImageEventTypes.MouseUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormImage, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormImage, Button, Shift, X, Y
         End If
     Next
 End Sub

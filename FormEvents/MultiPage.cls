@@ -8,7 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ''
-' Allows VBA Developers to Register Progammatically Created FormMultiPage to Events
+' Allows VBA Developers to Register Progammatically Created FormMultiPage to Events. Events will
+' have a signature identical to VBA's Event Signature with a Preappened Sender Paramater.
+' Such As:
+'   "Sub Control_Click()" is now "Sub Control_Click(Sender As MSForms.Control)"
+'
+'   "Sub Control_DblClick(ByVal Cancel As MSForms.ReturnBoolean)" is now
+'   "Sub Control_DblClick(Sender As MSForms.Control, ByVal Cancel As MSForms.ReturnBoolean)"
 ' Examples
 '   1:
 '     The follow example assumes that this event object is being created inside of a Form
@@ -25,10 +31,10 @@ Attribute VB_Exposed = False
 '           mltPageEvent.AddEvent "My_DblClick", MultiPageEventTypes.DblClick, Me
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.MultiPage)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.MultiPage, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -47,10 +53,10 @@ Attribute VB_Exposed = False
 '           mltPageEvent.AddEvent "My_DblClick", MultiPageEventTypes.DblClick
 '       End Sub
 '
-'       Sub My_Click()
+'       Sub My_Click(Sender As MSForms.MultiPage)
 '           MsgBox "I was clicked"
 '       End Sub
-'       Sub My_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'       Sub My_DblClick(Sender As MSForms.MultiPage, ByVal Cancel As MSForms.ReturnBoolean)
 '           MsgBox "I was Double Clicked"
 '       End Sub
 '
@@ -144,9 +150,9 @@ Private Sub FormMultiPage_AddControl(ByVal Control As MSForms.Control)
 
     For Each tmp In EventCollection(MultiPageEventTypes.AddControl)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Control
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Control
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Control
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Control
         End If
     Next
 End Sub
@@ -161,9 +167,9 @@ Private Sub FormMultiPage_BeforeDragOver( _
 
     For Each tmp In EventCollection(MultiPageEventTypes.BeforeDragOver)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Control, Data, X, Y, State, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Cancel, Control, Data, X, Y, State, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Control, Data, X, Y, State, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Cancel, Control, Data, X, Y, State, Effect, Shift
         End If
     Next
 End Sub
@@ -177,9 +183,9 @@ Private Sub FormMultiPage_BeforeDropOrPaste( _
 
     For Each tmp In EventCollection(MultiPageEventTypes.BeforeDropOrPaste)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel, Control, Action, Data, X, Y, Effect, Shift
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Cancel, Control, Action, Data, X, Y, Effect, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel, Control, Action, Data, X, Y, Effect, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Cancel, Control, Action, Data, X, Y, Effect, Shift
         End If
     Next
 End Sub
@@ -189,9 +195,9 @@ Private Sub FormMultiPage_Change()
 
     For Each tmp In EventCollection(MultiPageEventTypes.Change)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage
         End If
     Next
 End Sub
@@ -201,9 +207,9 @@ Private Sub FormMultiPage_Click()
 
     For Each tmp In EventCollection(MultiPageEventTypes.Click)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage
         End If
     Next
 End Sub
@@ -213,9 +219,9 @@ Private Sub FormMultiPage_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
 
     For Each tmp In EventCollection(MultiPageEventTypes.DblClick)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Cancel
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Cancel
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Cancel
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Cancel
         End If
     Next
 End Sub
@@ -229,9 +235,9 @@ Private Sub FormMultiPage_Error( _
 
     For Each tmp In EventCollection(MultiPageEventTypes.ErrorEvent)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Number, Description, SCode, Source, HelpFile, HelpContext, CancelDisplay
         End If
     Next
 End Sub
@@ -241,9 +247,9 @@ Private Sub FormMultiPage_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal 
 
     For Each tmp In EventCollection(MultiPageEventTypes.KeyDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, KeyCode, Shift
         End If
     Next
 End Sub
@@ -253,9 +259,9 @@ Private Sub FormMultiPage_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     For Each tmp In EventCollection(MultiPageEventTypes.KeyPress)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyAscii
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, KeyAscii
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyAscii
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, KeyAscii
         End If
     Next
 End Sub
@@ -265,9 +271,9 @@ Private Sub FormMultiPage_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Sh
 
     For Each tmp In EventCollection(MultiPageEventTypes.KeyUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), KeyCode, Shift
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, KeyCode, Shift
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, KeyCode, Shift
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, KeyCode, Shift
         End If
     Next
 End Sub
@@ -277,9 +283,9 @@ Private Sub FormMultiPage_Layout()
 
     For Each tmp In EventCollection(MultiPageEventTypes.Layout)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex)
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage
         End If
     Next
 End Sub
@@ -289,9 +295,9 @@ Private Sub FormMultiPage_MouseDown(ByVal Button As Integer, ByVal Shift As Inte
 
     For Each tmp In EventCollection(MultiPageEventTypes.MouseDown)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -301,9 +307,9 @@ Private Sub FormMultiPage_MouseMove(ByVal Button As Integer, ByVal Shift As Inte
 
     For Each tmp In EventCollection(MultiPageEventTypes.MouseMove)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -313,9 +319,9 @@ Private Sub FormMultiPage_MouseUp(ByVal Button As Integer, ByVal Shift As Intege
 
     For Each tmp In EventCollection(MultiPageEventTypes.MouseUp)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Button, Shift, X, Y
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Button, Shift, X, Y
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Button, Shift, X, Y
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Button, Shift, X, Y
         End If
     Next
 End Sub
@@ -325,9 +331,9 @@ Private Sub FormMultiPage_RemoveControl(ByVal Control As MSForms.Control)
 
     For Each tmp In EventCollection(MultiPageEventTypes.RemoveControl)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Control
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Control
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Control
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Control
         End If
     Next
 End Sub
@@ -341,9 +347,9 @@ Private Sub FormMultiPage_Scroll( _
 
     For Each tmp In EventCollection(MultiPageEventTypes.Scroll)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, ActionX, ActionY, RequestDx, RequestDy, ActualDx, ActualDy
         End If
     Next
 End Sub
@@ -353,9 +359,9 @@ Private Sub FormMultiPage_Zoom(Percent As Integer)
 
     For Each tmp In EventCollection(MultiPageEventTypes.Zoom)
         If tmp(EventObj.ObjectIndex) Is Nothing Then
-            Application.Run tmp(EventObj.NameIndex), Percent
+            Application.Run tmp(EventObj.NameIndex), FormMultiPage, Percent
         Else
-            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, Percent
+            VBA.CallByName tmp(EventObj.ObjectIndex), tmp(EventObj.NameIndex), VbMethod, FormMultiPage, Percent
         End If
     Next
 End Sub
