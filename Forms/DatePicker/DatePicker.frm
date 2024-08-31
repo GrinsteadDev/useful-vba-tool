@@ -15,8 +15,20 @@ Attribute VB_Exposed = False
 ''
 ' DatePicker v2.1.0
 '   Designed to replace the Windows 7 DatePicker UserForm Control
-' Useage
-'
+' Properties
+'   SelectedDate  As Date    - The Selected Date Value.
+'   SelectedYear  As Long    - The Selected Year.
+'   SelectedMonth As Long    - The Selected Month.
+'   SelectedDay   As Long    - The Selected Day.
+'   Canceled      As Boolean - Ture if the User did not click Ok.
+' Methods
+'   GetDate - A concise option for utilizing the userform.
+'     Params
+'       Optional DefaultDate As Date - Allows the user to specify the select date.
+'                                      This is also the date returned should the user
+'                                      cancel. It's default value is Today's Date.
+'     Returns
+'       As Date - The Selected Date Value.
 ' Dependencies
 '   Microsoft Froms 2.0 Object Library
 '   https://github.com/GrinsteadDev/useful-vba-tools/blob/main/Forms/FormEvents/LabelEvent.cls
@@ -429,6 +441,9 @@ End Property
 Public Property Get SelectedMonth() As Long
     SelectedMonth = VBA.Month(CurrDate)
 End Property
+Public Property Get SelectedDay() As Long
+   SelectedDay = VBA.Day(CurrDate)
+End Property
 Public Property Get Canceled() As Boolean
     Canceled = IsCanceled
 End Property
@@ -439,8 +454,16 @@ Public Function GetDate(Optional DefaultDate As Date) As Date
     
     If d = DefaultDate Then DefaultDate = VBA.Date
     
+    If Not CurrTar Is Nothing Then
+        CurrTar.BackColor = DEFAULT_BG
+        CurrTar.ForeColor = DEFAULT_FG
+        Set CurrTar = Nothing
+    End If
+    
     CurrDate = DefaultDate
     Me.Show
     
     GetDate = CurrDate
 End Function
+
+
