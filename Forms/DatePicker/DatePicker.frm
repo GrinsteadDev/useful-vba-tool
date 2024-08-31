@@ -6,7 +6,6 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} DatePicker
    ClientTop       =   465
    ClientWidth     =   6255
    OleObjectBlob   =   "DatePicker.frx":0000
-   StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "DatePicker"
 Attribute VB_GlobalNameSpace = False
@@ -61,6 +60,13 @@ Private IsCanceled As Boolean
 Private Function IsEven(Val As Long) As Boolean
     IsEven = Not CBool(Val And 1)
 End Function
+
+Private Sub Center()
+    With Me
+        .Left = Application.Left + (Application.Width / 2) - (.Width / 2)
+        .Top = Application.Top + ((Application.Height + (Application.Height - Application.UsableHeight)) / 2) - .Height
+    End With
+End Sub
 
 Private Sub AddLabels(RowCount As Long, ColCount As Long, Total As Long, PageFrame As MSForms.Frame, Padding As Long)
     Dim i As Long, lbl_obj As MSForms.Label, _
@@ -297,6 +303,7 @@ Private Sub TodayTag_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, 
 End Sub
 
 Private Sub UserForm_Activate()
+    Center
     ShowDay
 End Sub
 
