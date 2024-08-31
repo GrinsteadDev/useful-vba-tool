@@ -95,6 +95,7 @@ Private Sub AddLabels(RowCount As Long, ColCount As Long, Total As Long, PageFra
         Set lbl_event.FormLabel = lbl_obj
             lbl_event.AddEvent "Lbl_Click", LabelEventTypes.Click, Me
             lbl_event.AddEvent "Lbl_MouseMove", LabelEventTypes.MouseMove, Me
+            lbl_event.AddEvent "Day_DblClick", LabelEventTypes.DblClick, Me
             
         
         LblCollection.Add Array(lbl_obj, lbl_event)
@@ -410,6 +411,12 @@ Public Sub Lbl_Click(Sender As MSForms.Label)
                 ShowMonth
         End Select
     End With
+End Sub
+
+Public Sub Day_DblClick(Sender As MSForms.Label, ByVal Cancel As MSForms.ReturnBoolean)
+    If Sender.Parent.Name = Me.DayFrame.Name Then
+        OkButton_Click
+    End If
 End Sub
 
 '' Public Properties
