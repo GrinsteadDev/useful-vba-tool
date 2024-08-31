@@ -19,7 +19,7 @@ Attribute VB_Exposed = False
 '
 ' Dependencies
 '   Microsoft Froms 2.0 Object Library
-'   https://github.com/GrinsteadDev/useful-vba-tools/blob/main/FormEvents/LabelEvent.cls
+'   https://github.com/GrinsteadDev/useful-vba-tools/blob/main/Forms/FormEvents/LabelEvent.cls
 
 Option Explicit
 
