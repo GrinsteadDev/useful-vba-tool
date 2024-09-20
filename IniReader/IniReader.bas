@@ -383,7 +383,7 @@ End Function
 '   IniDoc   As Object - A Dictionary Object to fill with the Ini File's data.
 ' Returns
 '   void
-Private Sub ReadIniFile(ByVal FilePath As String, IniDoc As Object)
+Private Sub ReadIniFile(ByVal FilePath As String, iniDoc As Object)
     LastError.ErrNumber = 0
     LastError.ErrDesc = ""
     LastError.ErrFunc = "IniReader.ReadIniFile"
@@ -417,7 +417,7 @@ Private Sub ReadIniFile(ByVal FilePath As String, IniDoc As Object)
     
     ProcessLine "", Nothing, True
     For Each ln In lines
-        ProcessLine CStr(ln), IniDoc
+        ProcessLine CStr(ln), iniDoc
     Next
     
 CleanUp:
@@ -442,7 +442,7 @@ End Sub
 '   OverWriteExisting As Boolean - Determines if this function can overwrite an exisiting file.
 ' Returns
 '   void
-Private Sub WriteIniFile(FilePath As String, IniDoc As Object, OverWriteExisting As Boolean)
+Private Sub WriteIniFile(FilePath As String, iniDoc As Object, OverWriteExisting As Boolean)
     LastError.ErrNumber = 0
     LastError.ErrDesc = ""
     LastError.ErrFunc = "IniReader.WriteIniFile"
@@ -468,7 +468,7 @@ Private Sub WriteIniFile(FilePath As String, IniDoc As Object, OverWriteExisting
         GoTo CleanUp
     End If
     
-    ini_str = ConvertToString(IniDoc)
+    ini_str = ConvertToString(iniDoc)
     data = UTF8FromString(ini_str)
     fn = FreeFile
     fl = FileLen(fp)
@@ -661,7 +661,7 @@ End Function
 '   IniSecFullName As String - The Section name.
 ' Returns
 '   Object                   - An Ini Section Object
-Private Function GetCurrSection(IniDoc As Object, currItem As Object, IniSecFullName As String) As Object
+Private Function GetCurrSection(iniDoc As Object, currItem As Object, IniSecFullName As String) As Object
     LastError.ErrNumber = 0
     LastError.ErrDesc = ""
     LastError.ErrFunc = "IniReader.GetCurrSection"
@@ -669,7 +669,7 @@ Private Function GetCurrSection(IniDoc As Object, currItem As Object, IniSecFull
     
     Dim v_out As Object, s_names() As String, i As Long
     
-    Set v_out = IniDoc
+    Set v_out = iniDoc
     
     s_names = VBA.Split(IniSecFullName, ".")
     
@@ -1053,8 +1053,11 @@ Private Function StringFromUTF8(bytes() As Byte) As String
     n_bytes = bArrLen(bytes)
     
     If n_bytes > 0 Then
+#If Win64 Then
         n_chars = MultiByteToWideChar(CP_UTF8, 0&, VarPtr(bytes(0)), n_bytes, 0^, 0&)
-        
+#Else
+        n_chars = MultiByteToWideChar(CP_UTF8, 0&, VarPtr(bytes(0)), n_bytes, 0&, 0&)
+#End If
         ReDim v_out(0 To n_chars * 2 - 1) '' VBA Strings are Unicode, double-wide, or UTF-16, therefor char = 2 bytes
         
         n_chars = MultiByteToWideChar(CP_UTF8, 0&, VarPtr(bytes(0)), n_bytes, VarPtr(v_out(0)), n_chars)
@@ -1078,11 +1081,17 @@ Function UTF8FromString(str As String) As Byte()
     n_chars = Len(str)
     
     If n_chars > 0 Then
+#If Win64 Then
         n_bytes = WideCharToMultiByte(CP_UTF8, 0&, StrPtr(str), n_chars, 0^, 0&, 0^, 0^)
-        
+#Else
+        n_bytes = WideCharToMultiByte(CP_UTF8, 0&, StrPtr(str), n_chars, 0&, 0&, 0&, 0&)
+#End If
         ReDim v_out(0 To n_bytes - 1)
-        
+#If Win64 Then
         n_bytes = WideCharToMultiByte(CP_UTF8, 0&, StrPtr(str), n_chars, VarPtr(v_out(0)), n_bytes, 0^, 0^)
+#Else
+        n_bytes = WideCharToMultiByte(CP_UTF8, 0&, StrPtr(str), n_chars, VarPtr(v_out(0)), n_bytes, 0&, 0&)
+#End If
     End If
     
     UTF8FromString = v_out
